@@ -1,49 +1,69 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Star, MapPin, Calendar, Heart, Plus, Camera } from 'lucide-react';
 import styles from './SpotDetails.module.css';
 
 export default function SpotDetails({ id }) {
-    // Mock Data (In reality, fetch based on ID)
-    const spot = {
-        id,
-        name: 'Sushi Zen',
-        address: '123 Harbor View Dr.',
-        totalVisits: 3,
-        isWishlist: false,
-        history: [
-            { date: '2023-10-15', mood: 'Romantic', rating: 5, notes: 'Anniversary dinner.' },
-            { date: '2023-08-20', mood: 'Casual', rating: 4, notes: 'Quick lunch.' },
-            { date: '2023-05-10', mood: 'Excited', rating: 5, notes: 'First time trying it!' },
-        ],
-        menu: [
-            { name: 'Otoro Nigiri', rating: 5, tags: ['Must Order'] },
-            { name: 'Uni Spoon', rating: 5, tags: ['Shared'] },
-            { name: 'Miso Soup', rating: 3, tags: [] },
-        ],
-        photos: [
-            'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=400&q=80',
-            'https://images.unsplash.com/photo-1553621042-f6e147245754?w=400&q=80',
-            'https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=400&q=80',
-        ]
+    const [spot, setSpot] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [wishlist, setWishlist] = useState(false);
+
+    useEffect(() => {
+        fetchSpot();
+    }, [id]);
+
+    const fetchSpot = async () => {
+        try {
+            const response = await fetch(`/api/spots/${id}`);
+            const data = await response.json();
+            setSpot(data);
+            setWishlist(data.isWishlist);
+        } catch (error) {
+            console.error('Error fetching spot:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const [wishlist, setWishlist] = useState(spot.isWishlist);
+    const toggleWishlist = async () => {
+        try {
+            if (wishlist) {
+                await fetch(`/api/wishlist?spotId=${id}`, { method: 'DELETE' });
+            } else {
+                await fetch('/api/wishlist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ spotId: id }),
+                });
+            }
+            setWishlist(!wishlist);
+        } catch (error) {
+            console.error('Error toggling wishlist:', error);
+        }
+    };
+
+    if (loading) {
+        return <div className={styles.loading}>Loading spot details...</div>;
+    }
+
+    if (!spot) {
+        return <div className={styles.empty}>Spot not found</div>;
+    }
 
     return (
         <div className={styles.container}>
             {/* Header Image */}
             <div className={styles.hero}>
-                <img src={spot.photos[0]} alt={spot.name} className={styles.heroImage} />
+                <img src={spot.image || spot.visits[0]?.spot?.image || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80'} alt={spot.name} className={styles.heroImage} />
                 <div className={styles.heroOverlay}>
                     <h1 className={styles.title}>{spot.name}</h1>
                     <div className={styles.location}>
-                        <MapPin size={16} /> {spot.address}
+                        <MapPin size={16} /> {spot.address || 'Location not specified'}
                     </div>
                 </div>
                 <button
                     className={`${styles.wishlistBtn} ${wishlist ? styles.active : ''}`}
-                    onClick={() => setWishlist(!wishlist)}
+                    onClick={toggleWishlist}
                 >
                     <Heart size={24} fill={wishlist ? "currentColor" : "none"} />
                 </button>
@@ -55,68 +75,57 @@ export default function SpotDetails({ id }) {
                     <span className={styles.statLabel}>Visits</span>
                 </div>
                 <div className={styles.statBox}>
-                    <span className={styles.statValue}>4.7</span>
+                    <span className={styles.statValue}>{spot.avgRating}</span>
                     <span className={styles.statLabel}>Avg Rating</span>
                 </div>
             </div>
 
             {/* Menu Tracking */}
-            <section className={styles.section}>
-                <div className={styles.sectionHeader}>
-                    <h2>Menu Highlights</h2>
-                    <button className={styles.addBtn}><Plus size={18} /></button>
-                </div>
-                <div className={styles.menuGrid}>
-                    {spot.menu.map((item, i) => (
-                        <div key={i} className={styles.menuItem}>
-                            <div className={styles.menuName}>{item.name}</div>
-                            <div className={styles.menuRating}>
-                                {[...Array(5)].map((_, idx) => (
-                                    <Star
-                                        key={idx}
-                                        size={12}
-                                        fill={idx < item.rating ? "var(--warning)" : "none"}
-                                        color={idx < item.rating ? "var(--warning)" : "var(--secondary)"}
-                                    />
-                                ))}
+            {spot.menuItems && spot.menuItems.length > 0 && (
+                <section className={styles.section}>
+                    <div className={styles.sectionHeader}>
+                        <h2>Menu Highlights</h2>
+                        <button className={styles.addBtn}><Plus size={18} /></button>
+                    </div>
+                    <div className={styles.menuGrid}>
+                        {spot.menuItems.map((item) => (
+                            <div key={item.id} className={styles.menuItem}>
+                                <div className={styles.menuName}>{item.name}</div>
+                                <div className={styles.menuRating}>
+                                    {[...Array(5)].map((_, idx) => (
+                                        <Star
+                                            key={idx}
+                                            size={12}
+                                            fill={idx < (item.rating || 0) ? "var(--warning)" : "none"}
+                                            color={idx < (item.rating || 0) ? "var(--warning)" : "var(--secondary)"}
+                                        />
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             {/* Visit History */}
-            <section className={styles.section}>
-                <h2>Memory Lane</h2>
-                <div className={styles.timeline}>
-                    {spot.history.map((visit, i) => (
-                        <div key={i} className={styles.timelineItem}>
-                            <div className={styles.timelineDate}>
-                                <Calendar size={14} /> {visit.date}
+            {spot.visits && spot.visits.length > 0 && (
+                <section className={styles.section}>
+                    <h2>Memory Lane</h2>
+                    <div className={styles.timeline}>
+                        {spot.visits.map((visit) => (
+                            <div key={visit.id} className={styles.timelineItem}>
+                                <div className={styles.timelineDate}>
+                                    <Calendar size={14} /> {new Date(visit.date).toLocaleDateString()}
+                                </div>
+                                <div className={styles.timelineContent}>
+                                    <div className={styles.timelineMood}>{visit.mood} • {visit.rating}/5</div>
+                                    <p className={styles.timelineNotes}>{visit.notes}</p>
+                                </div>
                             </div>
-                            <div className={styles.timelineContent}>
-                                <div className={styles.timelineMood}>{visit.mood} • {visit.rating}/5</div>
-                                <p className={styles.timelineNotes}>{visit.notes}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Photos */}
-            <section className={styles.section}>
-                <div className={styles.sectionHeader}>
-                    <h2>Gallery</h2>
-                    <button className={styles.addBtn}><Camera size={18} /></button>
-                </div>
-                <div className={styles.gallery}>
-                    {spot.photos.map((photo, i) => (
-                        <div key={i} className={styles.photoWrapper}>
-                            <img src={photo} alt="Memory" className={styles.photo} />
-                        </div>
-                    ))}
-                </div>
-            </section>
+                        ))}
+                    </div>
+                </section>
+            )}
         </div>
     );
 }

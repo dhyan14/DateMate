@@ -101,3 +101,11 @@
     font-size: 0.8rem;
     color: var(--secondary);
 }
+
+.loading,
+.empty {
+    text-align: center;
+    padding: var(--spacing-xxl);
+    color: var(--secondary);
+    font-size: 1rem;
+}

@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String   @unique
+  avatar    String?
+  createdAt DateTime @default(now())
+  moments   Moment[]
+  visits    Visit[]
+}
+
+model Moment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  image     String
+  caption   String
+  location  String?
+  likes     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Spot {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  address   String?
+  image     String?
+  visits    Visit[]
+  menuItems MenuItem[]
+  wishlist  Wishlist[]
+  createdAt DateTime   @default(now())
+}
+
+model Visit {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  spotId    String   @db.ObjectId
+  spot      Spot     @relation(fields: [spotId], references: [id])
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  date      DateTime
+  mood      String?
+  rating    Int
+  notes     String?
+  items     String[] // Array of menu items tried
+  createdAt DateTime @default(now())
+}
+
+model MenuItem {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  spotId   String @db.ObjectId
+  spot     Spot   @relation(fields: [spotId], references: [id])
+  name     String
+  rating   Int?
+  tags     String[] // e.g., "Must Order", "Shared", "Favorite"
+  notes    String?
+}
+
+model Wishlist {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  spotId    String   @db.ObjectId
+  spot      Spot     @relation(fields: [spotId], references: [id])
+  addedAt   DateTime @default(now())
+  notes     String?
+}
