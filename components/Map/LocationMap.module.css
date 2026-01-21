@@ -1,0 +1,128 @@
+.mapContainer {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    background-color: #1a1a1a;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.mapBackground {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #2a2a2a 0%, #111 100%);
+    position: relative;
+}
+
+.grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.5;
+}
+
+.marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 1s ease-in-out;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    z-index: 2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.avatarPartner {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    z-index: 1;
+    animation: pulse 2s infinite;
+}
+
+.pulseMe {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.pulsePartner {
+    background: var(--accent-glow);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+.controls {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+}
+
+.card {
+    background: var(--surface);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.card h3 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.card p {
+    color: var(--secondary);
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.actionButton {
+    background: var(--primary);
+    color: var(--background);
+    width: 100%;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform var(--transition-fast);
+}
+
+.actionButton:hover {
+    transform: translateY(-2px);
+}

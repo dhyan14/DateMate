@@ -1,0 +1,55 @@
+.nav {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(26, 26, 26, 0.85);
+    backdrop-filter: blur(12px);
+    padding: 12px 32px;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    z-index: 100;
+    width: 90%;
+    max-width: 400px;
+}
+
+.link {
+    color: var(--secondary);
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.link:hover,
+.link:active {
+    color: var(--primary);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.addButton {
+    position: relative;
+    top: -24px;
+    background-color: var(--surface);
+    border-radius: 50%;
+    padding: 4px;
+}
+
+.addIcon {
+    color: var(--accent);
+    background-color: var(--surface);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform var(--transition-normal);
+    filter: drop-shadow(0 4px 12px var(--accent-glow));
+}
+
+.addIcon:hover {
+    transform: scale(1.1) rotate(90deg);
+}

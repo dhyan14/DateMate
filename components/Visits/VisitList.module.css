@@ -1,0 +1,120 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding-bottom: var(--spacing-xxl);
+}
+
+.card {
+    display: flex;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
+    text-decoration: none;
+    color: inherit;
+    height: 140px;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    border-color: var(--secondary);
+}
+
+.imageContainer {
+    width: 120px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rating {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    padding: 4px 8px;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--warning);
+}
+
+.content {
+    padding: var(--spacing-md);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.name {
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.arrow {
+    color: var(--secondary);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all var(--transition-normal);
+}
+
+.card:hover .arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.meta {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: 8px;
+}
+
+.metaItem {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--secondary);
+}
+
+.notes {
+    font-size: 0.9rem;
+    color: var(--secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: auto;
+}
+
+.tags {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.tag {
+    background: var(--surface-hover);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: var(--secondary);
+}

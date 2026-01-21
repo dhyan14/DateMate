@@ -1,0 +1,12 @@
+.searchBtn {
+    color: var(--primary);
+    padding: 8px;
+    border-radius: 50%;
+    background: var(--surface);
+    transition: all var(--transition-fast);
+}
+
+.searchBtn:hover {
+    background: var(--surface-hover);
+    color: var(--accent);
+}
