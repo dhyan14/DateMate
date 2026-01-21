@@ -1,6 +1,6 @@
 "use client";
 import Link from 'next/link';
-import { Star, MapPin, Calendar, ArrowRight } from 'lucide-react';
+import { Star, Calendar, ArrowRight } from 'lucide-react';
 import styles from './VisitList.module.css';
 
 const MOCK_VISITS = [

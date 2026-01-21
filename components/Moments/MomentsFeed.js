@@ -1,4 +1,4 @@
-import Image from 'next/image';
+
 import { Heart, MessageCircle, MoreVertical } from 'lucide-react';
 import styles from './MomentsFeed.module.css';
 
